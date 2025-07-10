@@ -319,8 +319,7 @@ The solver will find optimal binary assignments that minimize the path cost whil
 
 - Q Deep
 - Innopolis University
-- Hadi Salloum, Amer Albadr
-
+  
 ## 📞 Contact
 
 - Email: m.mifsudbonici@innopolis.university
