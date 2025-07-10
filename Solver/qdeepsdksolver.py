@@ -7,7 +7,7 @@ import os
 solver = QDeepHybridSolver()
 
 # Set the authentication token
-solver.token = "your-auth-token"
+solver.token = "your_q_deep_api_token_here"
 
 # Configure parameters (if different from defaults)
 solver.m_budget = 50000     # Measurement budget
