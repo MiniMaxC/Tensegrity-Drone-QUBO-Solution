@@ -8,7 +8,7 @@ This project provides the complete mathematical framework and a corresponding Py
 
 The core task is to translate a high-level optimization problem with continuous variables and multiple constraints into the strict QUBO format $\min z^T Q z$, where every variable is binary.
 
-This project implements an optimal path planning algorithm for tensegrity drones navigating through complex environments with multiple convex regions and configuration constraints. The system formulates the path planning problem as a QUBO optimization problem and solves it using the QDeep hybrid quantum-classical solver.
+This project implements an optimal path planning algorithm for tensegrity drones navigating through complex environments with multiple convex regions and configuration constraints. The system formulates the path planning problem as a QUBO optimization problem and solves it using the Q Deep hybrid quantum-classical solver.
 
 **🎯 User-Friendly Design**: The core algorithmic components are organized in a `Solver/` folder that acts as a "black box" - users can simply run `python Main.py` and configure parameters in `Inputs.py` without needing to understand the complex mathematical implementation details.
 
@@ -46,7 +46,7 @@ The final step is to map the coefficients from the binary polynomial to the QUBO
 
 - **QUBO Formulation**: Provides a complete mathematical and programmatic workflow to convert the entire MIQP into a standard QUBO format.
 
-- **Solver-Agnostic Output**: Generates a final QUBO matrix ($Q$) that can be used with any quantum annealer, quantum-inspired optimizer, or classical QUBO solver. Here QDeep's Qonquester platform is used.
+- **Solver-Agnostic Output**: Generates a final QUBO matrix ($Q$) that can be used with any quantum annealer, quantum-inspired optimizer, or classical QUBO solver. Here Q Deep's Qonquester platform is used.
 
 - **Automated Matrix Construction**: Includes a Python script that automates the end-to-end process of building the QUBO matrix from defined problem parameters.
 
@@ -67,7 +67,7 @@ TensegrityDroneOptimisation/
 │   └── Source Problem - MIBP + Morphing Planning for a Tensegrity Drone.pdf  # Original research paper
 ├── Solver/                                                    # Core solver components ("black box")
 │   ├── quboconstruction.py                                    # QUBO matrix construction with callable main() function
-│   └── qdeepsdksolver.py                                      # QDeep hybrid solver integration
+│   └── qdeepsdksolver.py                                      # Q Deep hybrid solver integration
 └── README.md                                                  # This file
 ```
 
@@ -76,7 +76,7 @@ TensegrityDroneOptimisation/
 - **`Main.py`**: Complete workflow orchestrator that imports and runs both QUBO construction and solving in sequence
 - **`Inputs.py`**: Centralized configuration containing the `config` dictionary, mock data generation function, and problem parameters
 - **`Solver/quboconstruction.py`**: Core QUBO matrix construction logic with a callable `main()` function for integration with other scripts
-- **`Solver/qdeepsdksolver.py`**: QDeep quantum-inspired hybrid solver interface and results processing
+- **`Solver/qdeepsdksolver.py`**: Q Deep quantum-inspired hybrid solver interface and results processing
 
 The `Solver/` folder contains the core algorithmic components that can be treated as a "black box" - users typically only need to interact with `Main.py` and `Inputs.py` for configuration and execution.
 
@@ -91,8 +91,8 @@ pip install requests
 
 ### System Requirements
 - Python 3.7+
-- Internet connection (for QDeep API access)
-- QDeep account and API token
+- Internet connection (for Q Deep API access)
+- Q Deep account and API token
 
 ## ⚙️ Setup
 
@@ -130,7 +130,7 @@ This orchestrates the entire pipeline:
 2. **Generate Mock Data**: Create random problem matrices and vectors
 3. **Build QUBO Matrix**: Construct the 410×410 QUBO matrix with all constraints and objectives
 4. **Save Matrix**: Export to `Q_matrix.txt` (~1.5MB)
-5. **Solve Problem**: Use QDeep hybrid solver for optimization
+5. **Solve Problem**: Use Q Deep hybrid solver for optimization
 6. **Save Results**: Export solution to `Solved_Problem`
 
 Expected output: Complete execution in ~10-15 seconds with solution energy and variable assignments.
@@ -214,7 +214,7 @@ The main configuration is stored in the `config` dictionary, with automatic mock
 - **`r_conf`**: Drone configuration shape vectors
 - **`P_node`**: Node indexing matrices for constraint mapping
 
-### Solver Parameters in `Solver/qdeepsdksolver.py`:
+### Solver Parameters in `Solver/Q Deepsdksolver.py`:
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
@@ -229,7 +229,7 @@ The main configuration is stored in the `config` dictionary, with automatic mock
 - Contains all objective and penalty terms
 
 ### `Solved_Problem`
-- Optimization results from QDeep solver
+- Optimization results from Q Deep solver
 - Includes problem metadata and solution statistics
 - Contains binary variable assignments
 
@@ -254,7 +254,7 @@ The main configuration is stored in the `config` dictionary, with automatic mock
    ```
    Error: Invalid or missing API token
    ```
-   **Solution**: Update your QDeep API token in `Solver/qdeepsdksolver.py`
+   **Solution**: Update your Q Deep API token in `Solver/qdeepsdksolver.py`
 
 2. **Matrix File Not Found**:
    ```
