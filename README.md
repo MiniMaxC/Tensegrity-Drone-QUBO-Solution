@@ -110,7 +110,7 @@ pip install requests
 3. **Configure API Token**:
    - Update the API token in `Solver/qdeepsdksolver.py`:
    ```python
-   solver.token = "your_qdeep_api_token_here"
+   solver.token = "your_q_deep_api_token_here"
    ```
 
 4. **Adjust Problem Parameters** (optional):
