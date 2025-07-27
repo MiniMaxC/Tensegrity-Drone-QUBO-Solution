@@ -8,9 +8,11 @@ This project provides the complete mathematical framework and a corresponding Py
 
 The core task is to translate a high-level optimization problem with continuous variables and multiple constraints into the strict QUBO format $\min z^T Q z$, where every variable is binary.
 
-This project implements an optimal path planning algorithm for tensegrity drones navigating through complex environments with multiple convex regions and configuration constraints. The system formulates the path planning problem as a QUBO optimization problem and solves it using the QDeep hybrid quantum-classical solver.
+This project implements an optimal path planning algorithm for tensegrity drones navigating through complex environments with multiple convex regions and configuration constraints. The system formulates the path planning problem as a QUBO optimization problem and solves it using the Q Deep hybrid quantum-classical solver.
 
 **🎯 User-Friendly Design**: The core algorithmic components are organized in a `Solver/` folder that acts as a "black box" - users can simply run `python Main.py` and configure parameters in `Inputs.py` without needing to understand the complex mathematical implementation details.
+
+**🎨 Advanced Visualization**: Includes comprehensive 3D visualization capabilities for exploring the path planning environment, tensegrity drone configurations, safe zones, start/finish positions, and solution paths using interactive Plotly visualizations.
 
 ## 🔬 Methodology
 
@@ -46,7 +48,7 @@ The final step is to map the coefficients from the binary polynomial to the QUBO
 
 - **QUBO Formulation**: Provides a complete mathematical and programmatic workflow to convert the entire MIQP into a standard QUBO format.
 
-- **Solver-Agnostic Output**: Generates a final QUBO matrix ($Q$) that can be used with any quantum annealer, quantum-inspired optimizer, or classical QUBO solver. Here QDeep's Qonquester platform is used.
+- **Solver-Agnostic Output**: Generates a final QUBO matrix ($Q$) that can be used with any quantum annealer, quantum-inspired optimizer, or classical QUBO solver. Here Q Deep's Qonquester platform is used.
 
 - **Automated Matrix Construction**: Includes a Python script that automates the end-to-end process of building the QUBO matrix from defined problem parameters.
 
@@ -54,12 +56,20 @@ The final step is to map the coefficients from the binary polynomial to the QUBO
 
 - **Mock Data Generation**: Automatic generation of realistic problem data for testing and development, with easy replacement for real-world scenarios.
 
+- **Interactive 3D Visualization**: Comprehensive visualization system featuring:
+  - **Environment Visualization**: 3D rendering of safe zones, start/finish positions, and drone placement
+  - **Configuration Exploration**: Interactive visualization of all 8 tensegrity drone configurations with nodes, cables, and rods
+  - **Multi-Selection Capabilities**: Compare multiple configurations side-by-side or view them sequentially
+  - **Path Planning Display**: Visualize solution paths through the environment
+  - **Interactive Menu System**: User-friendly interface for accessing different visualization modes
+
 ## 📁 Project Structure
 
 ```
 TensegrityDroneOptimisation/
-├── Main.py                                                     # Main workflow orchestrator - runs complete pipeline
-├── Inputs.py                                                  # Configuration, parameters, and mock data generation
+├── Main.py                                                     # Main workflow orchestrator with visualization options
+├── Inputs.py                                                  # Configuration, parameters, and data generation
+├── interactive_visualizer.py                                 # Interactive menu system for visualizations
 ├── Q_matrix.txt                                               # Generated QUBO matrix (output)
 ├── Solved_Problem                                             # Optimization results (output)
 ├── Articles/                                                  # Research papers and documentation
@@ -67,18 +77,34 @@ TensegrityDroneOptimisation/
 │   └── Source Problem - MIBP + Morphing Planning for a Tensegrity Drone.pdf  # Original research paper
 ├── Solver/                                                    # Core solver components ("black box")
 │   ├── quboconstruction.py                                    # QUBO matrix construction with callable main() function
-│   └── qdeepsdksolver.py                                      # QDeep hybrid solver integration
+│   ├── qdeepsdksolver.py                                      # Q Deep hybrid solver integration
+│   ├── solutiondecoder.py                                     # Binary solution decoding utilities
+│   ├── config_loader.py                                       # Configuration loading from .mat files
+│   ├── load_config_vis.py                                     # Tensegrity configuration loader and visualizer
+│   ├── path_environment_visualizer.py                        # 3D environment and drone visualization
+│   └── Sixbar_Drone_12vertices_8configs_NEW_V4.mat           # Real tensegrity drone configuration data
 └── README.md                                                  # This file
 ```
 
 ### File Descriptions
 
-- **`Main.py`**: Complete workflow orchestrator that imports and runs both QUBO construction and solving in sequence
-- **`Inputs.py`**: Centralized configuration containing the `config` dictionary, mock data generation function, and problem parameters
-- **`Solver/quboconstruction.py`**: Core QUBO matrix construction logic with a callable `main()` function for integration with other scripts
-- **`Solver/qdeepsdksolver.py`**: QDeep quantum-inspired hybrid solver interface and results processing
+**Core Workflow:**
+- **`Main.py`**: Complete workflow orchestrator with enhanced command-line options for optimization and visualization
+- **`Inputs.py`**: Centralized configuration containing the `config` dictionary, real data loading, and problem parameters
 
-The `Solver/` folder contains the core algorithmic components that can be treated as a "black box" - users typically only need to interact with `Main.py` and `Inputs.py` for configuration and execution.
+**Visualization System:**
+- **`interactive_visualizer.py`**: Interactive menu system providing multiple visualization modes and configuration selection options
+
+**Solver Components:**
+- **`Solver/quboconstruction.py`**: Core QUBO matrix construction logic with a callable `main()` function
+- **`Solver/qdeepsdksolver.py`**: Q Deep quantum-inspired hybrid solver interface and results processing
+- **`Solver/solutiondecoder.py`**: Utilities for decoding binary solutions back to interpretable path and configuration data
+- **`Solver/config_loader.py`**: Configuration loading utilities for .mat file processing
+- **`Solver/load_config_vis.py`**: Tensegrity drone configuration loader with 3D visualization capabilities
+- **`Solver/path_environment_visualizer.py`**: 3D visualization of the path planning environment, safe zones, start/finish positions, and drone placement
+- **`Solver/Sixbar_Drone_12vertices_8configs_NEW_V4.mat`**: Real tensegrity drone configuration data (8 configurations, 12 nodes each)
+
+The `Solver/` folder contains the core algorithmic components that can be treated as a "black box" - users typically only need to interact with `Main.py` and the visualization files for configuration and execution.
 
 ## 🛠️ Requirements
 
@@ -87,12 +113,14 @@ The `Solver/` folder contains the core algorithmic components that can be treate
 pip install numpy
 pip install qdeepsdk
 pip install requests
+pip install plotly
+pip install scipy
 ```
 
 ### System Requirements
 - Python 3.7+
-- Internet connection (for QDeep API access)
-- QDeep account and API token
+- Internet connection (for Q Deep API access)
+- Q Deep account and API token
 
 ## ⚙️ Setup
 
@@ -104,13 +132,13 @@ pip install requests
 
 2. **Install dependencies**:
    ```bash
-   pip install numpy qdeepsdk requests
+   pip install numpy qdeepsdk requests plotly scipy
    ```
 
 3. **Configure API Token**:
    - Update the API token in `Solver/qdeepsdksolver.py`:
    ```python
-   solver.token = "your_qdeep_api_token_here"
+   solver.token = "your_q_deep_api_token_here"
    ```
 
 4. **Adjust Problem Parameters** (optional):
@@ -126,14 +154,31 @@ python Main.py
 ```
 
 This orchestrates the entire pipeline:
-1. **Load Configuration**: Import settings from `Inputs.py`
-2. **Generate Mock Data**: Create random problem matrices and vectors
-3. **Build QUBO Matrix**: Construct the 410×410 QUBO matrix with all constraints and objectives
-4. **Save Matrix**: Export to `Q_matrix.txt` (~1.5MB)
-5. **Solve Problem**: Use QDeep hybrid solver for optimization
-6. **Save Results**: Export solution to `Solved_Problem`
+1. **Load Configuration**: Import settings from `Inputs.py` with real tensegrity data
+2. **Build QUBO Matrix**: Construct the QUBO matrix with all constraints and objectives
+3. **Solve Problem**: Use Q Deep hybrid solver for optimization
+4. **Interactive Visualization**: Enhanced 3D visualization menu with multiple options
 
-Expected output: Complete execution in ~10-15 seconds with solution energy and variable assignments.
+Expected output: Complete execution with solution energy, variable assignments, and interactive visualizations.
+
+### Enhanced Visualization Options
+
+```bash
+# Full workflow with visualization menu
+python Main.py
+
+# Skip optimization, go directly to visualization menu
+python Main.py --visualize-only
+
+# Interactive visualization with full menu system
+python Main.py --interactive
+
+# Quick preset visualization examples
+python Main.py --quick-examples
+
+# Show configuration details only
+python Main.py --config-details
+```
 
 ### Individual Components
 
@@ -221,6 +266,37 @@ The main configuration is stored in the `config` dictionary, with automatic mock
 | `m_budget` | Measurement budget | 50000 |
 | `num_reads` | Number of solver reads | 10000 |
 
+## 🎨 Visualization Capabilities
+
+The project includes a comprehensive 3D visualization system built with Plotly for exploring and understanding the tensegrity drone path planning problem:
+
+### Environment Visualization
+- **Safe Zones**: 3D rendering of convex H-polytope regions (Room1, Corridor, Room2)
+- **Start & Goal Positions**: Clearly marked start (green) and goal (red) locations
+- **Drone Placement**: Tensegrity drone positioned at the start location
+- **Interactive 3D**: Rotate, zoom, and explore the environment
+
+### Configuration Exploration
+- **8 Real Configurations**: Visualize all tensegrity drone configurations from the dataset
+- **Structural Details**: Nodes (active/passive), cables (24 per config), rods (6 per config)
+- **Multi-Selection**: Choose specific configurations ("1 3 5") or view all
+- **Side-by-Side Comparison**: Compare up to 6 configurations simultaneously
+- **Sequential Viewing**: Browse through configurations one by one
+
+### Visualization Modes
+1. **Interactive Menu**: Full-featured menu with all visualization options
+2. **Quick Examples**: Preset demonstrations (environment + configurations + comparisons)
+3. **Configuration Details**: Summary of all available drone configurations
+4. **Specific Selection**: Choose and visualize particular configurations
+5. **Multi-Configuration Comparison**: Side-by-side visualization of multiple configurations
+6. **Sequential Browser**: View all configurations in sequence
+
+### Technical Features
+- **Plotly Integration**: High-quality, interactive 3D graphics
+- **Real-Time Interaction**: Rotate, zoom, pan through visualizations
+- **Browser-Based**: Visualizations open automatically in your default browser
+- **Modular Design**: Separate visualization system that can be used independently
+
 ## 📈 Output Files
 
 ### `Q_matrix.txt`
@@ -229,7 +305,7 @@ The main configuration is stored in the `config` dictionary, with automatic mock
 - Contains all objective and penalty terms
 
 ### `Solved_Problem`
-- Optimization results from QDeep solver
+- Optimization results from Q Deep solver
 - Includes problem metadata and solution statistics
 - Contains binary variable assignments
 
@@ -254,7 +330,7 @@ The main configuration is stored in the `config` dictionary, with automatic mock
    ```
    Error: Invalid or missing API token
    ```
-   **Solution**: Update your QDeep API token in `Solver/qdeepsdksolver.py`
+   **Solution**: Update your Q Deep API token in `Solver/qdeepsdksolver.py`
 
 2. **Matrix File Not Found**:
    ```
@@ -287,29 +363,27 @@ The main configuration is stored in the `config` dictionary, with automatic mock
 
 ## 📝 Example
 
-A 3D path planning example with default parameters:
+A 3D path planning example with real tensegrity data:
 - **Dimensions**: 3D space (x, y, z)
-- **Time steps**: 2 waypoints
-- **Nodes per drone**: 4 structural nodes
-- **Regions**: 2 convex safe regions (6 constraints each)
-- **Configurations**: 2 drone morphing settings
-- **Variables**: 410 total binary variables (18 position + 8 selection + 384 slack)
+- **Time steps**: 3 waypoints (configurable)
+- **Nodes per drone**: 12 structural nodes (real tensegrity data)
+- **Regions**: 3 convex safe regions (Room1 → Corridor → Room2)
+- **Configurations**: 8 real drone morphing configurations
+- **Real Data**: Loaded from `Sixbar_Drone_12vertices_8configs_NEW_V4.mat`
 
 Expected output:
 ```
---- Variable Mapping Initialized ---
-Total number of variables (N): 410
-  - Position vars (h): 18
-  - Region choice vars (c): 4  
-  - Config choice vars (s): 4
-  - Slack vars (z): 384
-------------------------------------
-Final Q matrix shape: (410, 410)
-Matrix saved to 'Q_matrix.txt'
-Verification successful: The Q matrix is upper-triangular.
+Loading real configuration data...
+✅ Loaded 8 real configurations with 12 nodes each
+Creating H-Polytope safe regions:
+  ✅ Room1: center=[-5.6 -0. -0.], size=[3.2 3.2 3.2], volume=32.8m³
+  ✅ Corridor: center=[0. 0. 0.], size=[8. 2. 3.2], volume=51.2m³
+  ✅ Room2: center=[5.6 0. 0.], size=[3.2 3.2 3.2], volume=32.8m³
+📍 Start (Room1): [-5.80, 0.35, 0.15]m
+🎯 Goal (Room2): [5.97, -0.04, -0.66]m
 ```
 
-The solver will find optimal binary assignments that minimize the path cost while respecting all region and configuration constraints.
+The solver finds optimal binary assignments that minimize the path cost while respecting all region and configuration constraints, followed by interactive 3D visualizations.
 
 ## 📄 License
 
@@ -317,14 +391,13 @@ The solver will find optimal binary assignments that minimize the path cost whil
 
 ## 🙏 Acknowledgments
 
-- QDeep
+- Q Deep
 - Innopolis University
-- Hadi Salloum, Amer Albadr
-
+  
 ## 📞 Contact
 
 - Email: m.mifsudbonici@innopolis.university
 - LinkedIn: www.linkedin.com/in/maximilian-mifsud-bonici-36100b371
 ---
 
-**Note**: This implementation is for research and educational purposes. For production use, consider additional validation and error handling. 
+**Note**: This implementation is for research and educational purposes. The visualization system provides comprehensive tools for exploring tensegrity drone configurations and path planning environments. For production use, consider additional validation and error handling. 
